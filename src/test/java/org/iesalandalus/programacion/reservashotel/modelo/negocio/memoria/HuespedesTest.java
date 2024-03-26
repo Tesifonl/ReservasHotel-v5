@@ -1,7 +1,7 @@
 package org.iesalandalus.programacion.reservashotel.modelo.negocio.memoria;
 
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
-import org.iesalandalus.programacion.reservashotel.modelo.negocio.Huespedes;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.Huespedes;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

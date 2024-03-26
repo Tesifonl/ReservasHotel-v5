@@ -15,6 +15,8 @@ public enum Opcion {
 	INSERTAR_RESERVA ("Insertar reserva"),
 	ANULAR_RESERVA ("Anular reserva"),
 	MOSTRAR_RESERVAS ("Mostrar reserva"),
+	LISTAR_RESERVAS_HUESPED("Listar reservas huésped"),
+	LISTAR_RESERVAS_TIPO_HABITACION("Listar reservas tipo habitación"),
 	CONSULTAR_DISPONIBILIDAD ("Consultar disponibilidad"),
 	REALIZAR_CHECKIN("Realizar checkin"),
 	REALIZAR_CHECKOUT("Realizar checkout");

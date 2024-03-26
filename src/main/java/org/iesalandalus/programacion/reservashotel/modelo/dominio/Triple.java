@@ -49,6 +49,11 @@ public class Triple extends Habitacion {
 	}
 	
 	public void setNumCamasIndividuales(int numCamasIndividuales) {
+		if (numCamasIndividuales < MIN_NUM_CAMAS_INDIVIDUALES || 
+			numCamasIndividuales > MAX_NUM_CAMAS_INDIVIDUALES) {
+				throw new IllegalArgumentException("ERROR: El n�mero de camas individuales de una habitaci�n triple no puede ser inferior a " + MIN_NUM_CAMAS_INDIVIDUALES + " ni mayor que " + MAX_NUM_CAMAS_INDIVIDUALES);
+		}
+		
 		this.numCamasIndividuales = numCamasIndividuales;
 	}
 	
@@ -57,8 +62,13 @@ public class Triple extends Habitacion {
 	}
 	
 	public void setNumCamasDobles(int numCamasDobles) {
+		
+		if (numCamasDobles < MIN_NUM_CAMAS_DOBLES || 
+			numCamasDobles > MAX_NUM_CAMAS_DOBLES) {
+				throw new IllegalArgumentException("ERROR: El n�mero de camas dobles de una habitaci�n triple no puede ser inferior a " + MIN_NUM_CAMAS_DOBLES + " ni mayor que " + MAX_NUM_CAMAS_DOBLES);
+		}
+		
 		this.numCamasDobles = numCamasDobles;
-		validaNumCamas();
 	}
 	
 	public void validaNumCamas() {
@@ -70,7 +80,7 @@ public class Triple extends Habitacion {
 		if (this.numCamasDobles < MIN_NUM_CAMAS_DOBLES || 
 				this.numCamasDobles > MAX_NUM_CAMAS_DOBLES) {
 				throw new IllegalArgumentException("ERROR: El n�mero de camas dobles de una habitaci�n triple no puede ser inferior a " + MIN_NUM_CAMAS_DOBLES + " ni mayor que " + MAX_NUM_CAMAS_DOBLES);
-			}
+		}
 		
 		if (this.numCamasDobles == MAX_NUM_CAMAS_DOBLES &&
 			this.numCamasIndividuales > MIN_NUM_CAMAS_INDIVIDUALES) {

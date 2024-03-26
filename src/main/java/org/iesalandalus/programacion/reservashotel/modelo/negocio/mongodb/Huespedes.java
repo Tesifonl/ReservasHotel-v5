@@ -1,4 +1,4 @@
-package org.iesalandalus.programacion.reservashotel.modelo.negocio;
+package org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb;
 
 
 import java.util.ArrayList;
@@ -7,8 +7,9 @@ import java.util.Collection;
 import javax.naming.OperationNotSupportedException;
 
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.IHuespedes;
 
-public class Huespedes {
+public class Huespedes implements IHuespedes{
 
 	private static ArrayList<Huesped> coleccionHuespedes;
 	
@@ -16,6 +17,7 @@ public class Huespedes {
 		coleccionHuespedes=new ArrayList<>();
 	}
 		
+	@Override
 	public ArrayList<Huesped> get() {
 		ArrayList<Huesped> copia=copiaProfundaHuespedes();
 		return copia;
@@ -31,11 +33,13 @@ public class Huespedes {
 		return copiahuespedes;
 	}
 
+	@Override
 	public int getTamano () {
 		return coleccionHuespedes.size();
 	}
 
-			
+		
+	@Override
 	public void insertar (Huesped huesped) throws OperationNotSupportedException {
 		boolean encontrado=false;
 		
@@ -54,6 +58,7 @@ public class Huespedes {
 		}else {throw new NullPointerException("ERROR: No se puede insertar un hu�sped nulo.");}
 	}
 
+	@Override
 	public Huesped buscar(Huesped huesped) {	
 		int posicion = 0;
 	
@@ -75,6 +80,7 @@ public class Huespedes {
 		}else {throw new NullPointerException("ERROR: No se puede buscar un hu�sped nulo.");}
 	}
 		
+	@Override
 	public void borrar (Huesped huesped) throws OperationNotSupportedException  {
 		boolean encontrado=false;
 		

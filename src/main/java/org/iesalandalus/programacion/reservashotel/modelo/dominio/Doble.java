@@ -33,14 +33,25 @@ public class Doble extends Habitacion {
 	}
 	
 	public void setNumCamasIndividuales(int numCamasIndividuales) {
+		if (numCamasIndividuales < MIN_NUM_CAMAS_INDIVIDUALES || 
+			numCamasIndividuales > MAX_NUM_CAMAS_INDIVIDUALES) {
+				throw new IllegalArgumentException("ERROR: El n�mero de camas individuales de una habitaci�n doble no puede ser inferior a " + MIN_NUM_CAMAS_INDIVIDUALES + " ni mayor que " + MAX_NUM_CAMAS_INDIVIDUALES);
+		}
+		
 		this.numCamasIndividuales = numCamasIndividuales;	
 	}
 	
 	public int getNumCamasDobles() {
+		
 		return numCamasDobles;
 	}
 	
 	public void setNumCamasDobles(int numCamasDobles) {
+		if (numCamasDobles < MIN_NUM_CAMAS_DOBLES || 
+			numCamasDobles > MAX_NUM_CAMAS_DOBLES) {
+				throw new IllegalArgumentException("ERROR: El n�mero de camas dobles de una habitaci�n doble no puede ser inferior a " + MIN_NUM_CAMAS_DOBLES + " ni mayor que " + MAX_NUM_CAMAS_DOBLES);
+		}
+		
 		this.numCamasDobles = numCamasDobles;
 	}
 	

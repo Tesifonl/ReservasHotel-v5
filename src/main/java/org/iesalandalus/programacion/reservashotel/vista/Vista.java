@@ -82,6 +82,16 @@ public class Vista {
 		if(opcion.equals(Opcion.MOSTRAR_RESERVAS)) {
 			mostrarReservas();}	
 		
+		if (opcion.equals(Opcion.LISTAR_RESERVAS_HUESPED)) {
+			Huesped huesped = Consola.getHuespedPorDni();
+			listarReservas(huesped);
+		}
+		
+		if (opcion.equals(Opcion.LISTAR_RESERVAS_TIPO_HABITACION)) {
+			TipoHabitacion tipoHabitacion = Consola.leerTipoHabitacion();
+			listarReservas(tipoHabitacion);
+		}
+		
 		if(opcion.equals(Opcion.CONSULTAR_DISPONIBILIDAD)) {
 			System.out.println("Introduce el tipo de habitacion");
 			TipoHabitacion tipoHabitacion=Consola.leerTipoHabitacion();
@@ -269,7 +279,7 @@ public class Vista {
 	
 	private void listarReservas(Huesped huesped) {
 
-		if(controlador.getReservas(huesped).size()>0) {
+		if(controlador.getReservas(huesped) != null && controlador.getReservas(huesped).size()>0) {
 			
 			ArrayList<Reserva> reservas = controlador.getReservas(huesped);
 			Collections.sort(reservas, new Comparator<Reserva>() {
@@ -292,9 +302,8 @@ public class Vista {
 	}
 	
 	private void listarReservas (TipoHabitacion tipoHabitacion) {
-		
-		
-		if (controlador.getReservas(tipoHabitacion).size() > 0) {
+
+		if (controlador.getReservas(tipoHabitacion) != null && controlador.getReservas(tipoHabitacion).size() > 0) {
 		
 			ArrayList<Reserva> reservas = controlador.getReservas(tipoHabitacion);
 			Collections.sort(reservas, new Comparator<Reserva>() {
@@ -336,7 +345,7 @@ public class Vista {
 		ArrayList<Reserva> nuevoArray1=controlador.getReservas(Consola.getHuespedPorDni());
 		Reserva reservaAnular=null;
 		
-		if (nuevoArray1.size() > 0) {	
+		if (nuevoArray1 != null && nuevoArray1.size() > 0) {	
 			ArrayList<Reserva> nuevoArray2=getReservasAnulables(nuevoArray1);
 			int posicion=0;
 			
@@ -353,13 +362,12 @@ public class Vista {
 			posicion=Entrada.entero();
 			reservaAnular=nuevoArray2.get(posicion);
 			controlador.borrar(reservaAnular);
-			}
-			else {
-				System.out.println("No existe ninguna reserva anulable para este huesped");
-			}
 		}
-	
-	
+		else {
+			System.out.println("No existe ninguna reserva anulable para este huesped");
+		}
+	}
+
 	
 	private void mostrarReservas() {
 
@@ -422,7 +430,6 @@ public class Vista {
 		ArrayList<Reserva> nuevoArray= controlador.getReservas(Consola.getHuespedPorDni());
 		Reserva reservaCheck=null;
 		
-		int contador=0;
 		int posicion=0;
 		
 		if (nuevoArray != null) {
@@ -450,7 +457,6 @@ public class Vista {
 		ArrayList<Reserva> nuevoArray= controlador.getReservas(Consola.getHuespedPorDni());
 		Reserva reservaCheck=null;
 		
-		int contador=0;
 		int posicion=0;
 		
 		if (nuevoArray != null) {

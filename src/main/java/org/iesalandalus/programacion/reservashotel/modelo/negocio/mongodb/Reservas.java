@@ -1,4 +1,4 @@
-package org.iesalandalus.programacion.reservashotel.modelo.negocio;
+package org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,8 +14,9 @@ import org.iesalandalus.programacion.reservashotel.modelo.dominio.Simple;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Suite;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Triple;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.IReservas;
 
-public class Reservas {
+public class Reservas implements IReservas{
 
 	private static ArrayList<Reserva> coleccionReservas;
 	
@@ -24,12 +25,13 @@ public class Reservas {
 		coleccionReservas=new ArrayList<>();
 	}
 	
-
+	@Override
 	public ArrayList<Reserva> get() {
 		ArrayList<Reserva> copia=copiaProfundaReservas();
 		return copia;
 	}
 	
+	@Override
 	public int getTamano() {
 		
 		int tamano=0;
@@ -48,6 +50,7 @@ public class Reservas {
 		return copiaReservas;
 	}
 
+	@Override
 	public void insertar (Reserva reserva) throws OperationNotSupportedException {
 		
 		if(reserva!=null) {
@@ -58,7 +61,8 @@ public class Reservas {
 			
 		}else {throw new NullPointerException("ERROR: No se puede insertar una reserva nula.");}
 	}
-
+	
+	@Override
 	public Reserva buscar(Reserva reserva) {	
 		Reserva buscarReserva=null;
 		int indice=0;
@@ -72,6 +76,7 @@ public class Reservas {
 			}else {throw new NullPointerException("ERROR: No se puede buscar una reserva nula.");}
 	}
 	
+	@Override
 	public void borrar (Reserva reserva) throws OperationNotSupportedException {
 		int indice=0;
 		
@@ -86,28 +91,30 @@ public class Reservas {
 		}else {throw new NullPointerException("ERROR: No se puede borrar una reserva nula.");}
 	}
 
+	@Override
 	public ArrayList<Reserva> getReservas (Huesped huesped) {
 	
-	if(huesped!=null) {
-		ArrayList<Reserva> nuevoArray=new ArrayList<>();
-		boolean encontrado=false;
-
-		for (int i=0;i<coleccionReservas.size();i++) {
-			if(coleccionReservas.get(i).getHuesped().getDni().equals(huesped.getDni())) {
-				encontrado=true;
-				nuevoArray.add(coleccionReservas.get(i));
+		if(huesped!=null) {
+			ArrayList<Reserva> nuevoArray=new ArrayList<>();
+			boolean encontrado=false;
+	
+			for (int i=0;i<coleccionReservas.size();i++) {
+				if(coleccionReservas.get(i).getHuesped().getDni().equals(huesped.getDni())) {
+					encontrado=true;
+					nuevoArray.add(coleccionReservas.get(i));
+				}
+			}	
+				
+			if (encontrado==false) {
+				return null;
 			}
-		}	
+	
+			return nuevoArray;
 			
-		if (encontrado==false) {
-			return null;
-		}
-
-		return nuevoArray;
-		
-	}else {throw new  NullPointerException("ERROR: No se pueden buscar reservas de un hu�sped nulo.");}
+		}else {throw new  NullPointerException("ERROR: No se pueden buscar reservas de un hu�sped nulo.");}
 	}
 	
+	@Override
 	public ArrayList<Reserva>  getReservas (TipoHabitacion tipoHabitacion) {
 		
 		if(tipoHabitacion!=null) {
@@ -147,29 +154,30 @@ public class Reservas {
 		}else {throw new  NullPointerException("ERROR: No se pueden buscar reservas de un tipo de habitaci�n nula.");}
 	}
 	
-	
+	@Override
 	public ArrayList<Reserva> getReservasFuturas (Habitacion habitacion) {
 
-	if(habitacion!=null) {
-		ArrayList<Reserva>  nuevoArray=new ArrayList<>();
-		boolean encontrado=false;
-		int posicion=0;
-		
-		for (int i=0;i<coleccionReservas.size();i++) 
-			if(coleccionReservas.get(i).getHabitacion().equals(habitacion) 
-					&& coleccionReservas.get(i).getFechaInicioReserva().isAfter(LocalDate.now())) {
-			encontrado=true;
-			nuevoArray.add(coleccionReservas.get(i));
-		}
+		if(habitacion!=null) {
+			ArrayList<Reserva>  nuevoArray=new ArrayList<>();
+			boolean encontrado=false;
+			int posicion=0;
 			
-		if (encontrado==false) {
-			return null;
-		}
-		return nuevoArray;
-
-	}else {throw new  NullPointerException("ERROR: No se pueden buscar reservas de una habitaci�n nula.");}
+			for (int i=0;i<coleccionReservas.size();i++) 
+				if(coleccionReservas.get(i).getHabitacion().equals(habitacion) 
+						&& coleccionReservas.get(i).getFechaInicioReserva().isAfter(LocalDate.now())) {
+				encontrado=true;
+				nuevoArray.add(coleccionReservas.get(i));
+			}
+				
+			if (encontrado==false) {
+				return null;
+			}
+			return nuevoArray;
+	
+		}else {throw new  NullPointerException("ERROR: No se pueden buscar reservas de una habitaci�n nula.");}
 	}
-
+	
+	@Override
 	public void realizarCheckin(Reserva reserva, LocalDateTime fecha) {
 		Reserva reservaBuscada=null;
 		if(reserva==null || fecha==null) {
@@ -179,6 +187,7 @@ public class Reservas {
 			reservaBuscada.setCheckIn(fecha);}
 	}
 	
+	@Override
 	public void realizarCheckout(Reserva reserva, LocalDateTime fecha) {
 		Reserva reservaBuscada=null;
 		

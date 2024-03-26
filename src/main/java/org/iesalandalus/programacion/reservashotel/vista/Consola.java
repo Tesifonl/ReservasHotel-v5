@@ -81,12 +81,18 @@ public class Consola {
 				opcionElegida=Opcion.MOSTRAR_RESERVAS;
 				break;
 			case 12:
-				opcionElegida=Opcion.CONSULTAR_DISPONIBILIDAD;
+				opcionElegida=Opcion.LISTAR_RESERVAS_HUESPED;
 				break;
 			case 13:
-				opcionElegida=Opcion.REALIZAR_CHECKIN;
+				opcionElegida=Opcion.LISTAR_RESERVAS_TIPO_HABITACION;
 				break;
 			case 14:
+				opcionElegida=Opcion.CONSULTAR_DISPONIBILIDAD;
+				break;
+			case 15:
+				opcionElegida=Opcion.REALIZAR_CHECKIN;
+				break;
+			case 16:
 				opcionElegida=Opcion.REALIZAR_CHECKOUT;
 				break;
 			case 0:
@@ -232,21 +238,36 @@ public class Consola {
 	public static Habitacion leerHabitacionPorIdentificador() {
 		
 		try {
-		System.out.println("Introduce un planta: ");
-		int planta=Entrada.entero();
-		System.out.println("Introduce un puerta: ");
-		int puerta=Entrada.entero();
-		
-		Habitacion habitacion=new Doble( planta, puerta, 50, 0, 1);
-		return habitacion;
+			System.out.println("Introduce un planta: ");
+			int planta=Entrada.entero();
+			System.out.println("Introduce un puerta: ");
+			int puerta=Entrada.entero();
+			System.out.println("Introduce una  tipo de habitacion: ");
+			TipoHabitacion tipoHabitacion=leerTipoHabitacion();
+			Habitacion habitacion = null;
+			
+			if (tipoHabitacion.equals(TipoHabitacion.SIMPLE)) {
+				habitacion=new Simple(planta,puerta,50);
+			}
+			else if (tipoHabitacion.equals(TipoHabitacion.DOBLE)) {
+				habitacion=new Doble(planta,puerta,80, 0, 1);
+			}
+			else if (tipoHabitacion.equals(TipoHabitacion.TRIPLE)) {
+				habitacion=new Triple(planta,puerta,100, 1, 1, 1);
+			}
+			else if (tipoHabitacion.equals(TipoHabitacion.SUITE)) {
+				habitacion=new Suite(planta,puerta,120, 1, true);
+			}
+	
+			return habitacion;
 		}
 		catch(IllegalArgumentException e){
-		System.out.println(e.getMessage());
-		return null;
+			System.out.println(e.getMessage());
+			return null;
 		}
 		catch(NullPointerException e) {
-		System.out.println(e.getMessage());
-		return null;
+			System.out.println(e.getMessage());
+			return null;
 		}
 	}
 	

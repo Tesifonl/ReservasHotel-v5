@@ -1,4 +1,4 @@
-package org.iesalandalus.programacion.reservashotel.modelo.negocio;
+package org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb;
 
 import java.util.ArrayList;
 
@@ -10,9 +10,10 @@ import org.iesalandalus.programacion.reservashotel.modelo.dominio.Simple;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Suite;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Triple;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.IHabitaciones;
 
 
-public class Habitaciones {
+public class Habitaciones implements IHabitaciones{
 	
 	private static ArrayList<Habitacion> coleccionHabitaciones;
 
@@ -21,7 +22,7 @@ public class Habitaciones {
 		coleccionHabitaciones=new ArrayList<>();
 	}
 	
-
+	@Override
 	public ArrayList<Habitacion> get() {
 		ArrayList<Habitacion> copia=copiaProfundaHabitaciones();
 		return copia;
@@ -49,7 +50,7 @@ public class Habitaciones {
 		return copiahabitaciones;
 	}
 
-	
+	@Override
 	public ArrayList<Habitacion> get (TipoHabitacion tipoHabitacion) {
 		
 		if(tipoHabitacion!=null) {
@@ -78,11 +79,12 @@ public class Habitaciones {
 		}else {throw new  NullPointerException("ERROR: No se puede insertar un tipo de habitacion nulo");}
 	}
 	
-	
+	@Override
 	public int getTamano() {
 		return coleccionHabitaciones.size();
 	}
 
+	@Override
 	public void insertar (Habitacion habitacion) throws OperationNotSupportedException {
 		boolean encontrado=false;
 		
@@ -103,6 +105,7 @@ public class Habitaciones {
 		}
 	}
 
+	@Override
 	public Habitacion buscar(Habitacion habitacion) {	
 		Habitacion buscarHabitacion=null;
 		int indice=0;
@@ -118,6 +121,7 @@ public class Habitaciones {
 			throw new NullPointerException("ERROR: No se puede buscar una habitaci�n nula.");}
 	}
 	
+	@Override
 	public void borrar (Habitacion habitacion) throws OperationNotSupportedException {
 		boolean encontrado=false;
 		

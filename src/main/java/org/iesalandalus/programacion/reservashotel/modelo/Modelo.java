@@ -9,15 +9,18 @@ import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
-import org.iesalandalus.programacion.reservashotel.modelo.negocio.Habitaciones;
-import org.iesalandalus.programacion.reservashotel.modelo.negocio.Huespedes;
-import org.iesalandalus.programacion.reservashotel.modelo.negocio.Reservas;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.IHabitaciones;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.IHuespedes;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.IReservas;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.Habitaciones;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.Huespedes;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.Reservas;
 
 public class Modelo {
 	
-	private Huespedes huespedes;
-	private Habitaciones habitaciones;
-	private Reservas reservas;
+	private IHuespedes huespedes;
+	private IHabitaciones habitaciones;
+	private IReservas reservas;
 
 	
 	public Modelo() {

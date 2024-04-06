@@ -6,7 +6,6 @@ import javax.naming.OperationNotSupportedException;
 
 import org.iesalandalus.programacion.reservashotel.controlador.Controlador;
 import org.iesalandalus.programacion.reservashotel.modelo.Modelo;
-import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.utilidades.MongoDB;
 import org.iesalandalus.programacion.reservashotel.vista.Vista;
 
 public class MainApp {

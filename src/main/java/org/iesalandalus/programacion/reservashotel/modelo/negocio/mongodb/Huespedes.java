@@ -8,10 +8,12 @@ import javax.naming.OperationNotSupportedException;
 
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.IHuespedes;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.utilidades.MongoDB;
 
 public class Huespedes implements IHuespedes{
 
 	private static ArrayList<Huesped> coleccionHuespedes;
+	private static final String COLECCION=null;
 	
 	public Huespedes() {
 		coleccionHuespedes=new ArrayList<>();
@@ -32,6 +34,7 @@ public class Huespedes implements IHuespedes{
 	
 		return copiahuespedes;
 	}
+	
 
 	@Override
 	public int getTamano () {
@@ -101,4 +104,12 @@ public class Huespedes implements IHuespedes{
 		
 		}else {throw new NullPointerException("ERROR: No se puede borrar un hu�sped nulo.");}
 	}
+	
+	@Override
+	public void comenzar() {MongoDB.establecerConexion();};
+	
+	
+	@Override
+	public void terminar() {MongoDB.cerrarConexion();};
+	
 }

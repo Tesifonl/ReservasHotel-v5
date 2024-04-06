@@ -11,6 +11,7 @@ import org.iesalandalus.programacion.reservashotel.modelo.dominio.Regimen;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Simple;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Suite;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Triple;
 import org.iesalandalus.programacion.utilidades.Entrada;
 
@@ -30,7 +31,7 @@ public class MongoDB {
 		public static final DateTimeFormatter FORMATO_DIA_HORA=DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 		
 		private static final String SERVIDOR="cluster0.unvj2sg.mongodb.net";
-		//private static final int PUERTO=27017;
+		private static final int PUERTO=27017;
 		private static final String BD="reservashotel";
 		private static final String USUARIO="reservashotel";
 		private static final String CONTRASENA="reservashotel-2024";
@@ -78,6 +79,7 @@ public class MongoDB {
 			}
 			
 			return conexion.getDatabase(BD);
+		
 		}
 		
 		
@@ -116,6 +118,8 @@ public class MongoDB {
 	        }
 	        
 			System.out.println("Conexión a MongoDB realizada correctamente.");
+			
+			
 		}
 		
 		public static void cerrarConexion() {
@@ -197,12 +201,16 @@ public class MongoDB {
 			if(documentoHuesped==null) {
 				return null;
 			}
-			//return new Huesped(documentoHuesped.getString(NOMBRE),
-					documentoHuesped.getString(DNI),documentoHuesped.getString(CORREO),
-					documentoHuesped.getString(TELEFONO),
-					(documentoHuesped.getString(FECHA_NACIMIENTO).);
+			
+			
+			return new Huesped(documentoHuesped.getString(NOMBRE),
+							   documentoHuesped.getString(DNI),
+							   documentoHuesped.getString(CORREO),
+							   documentoHuesped.getString(TELEFONO),
+							   (LocalDate.parse(documentoHuesped.getString(FECHA_NACIMIENTO),FORMATO_DIA)));
 			
 		}
+		
 		public static Habitacion getHabitacion(Document documentoHabitacion) {
 			
 			Habitacion habitacion=null;
@@ -211,11 +219,57 @@ public class MongoDB {
 				return null;
 			}
 			
+			String tipo=documentoHabitacion.getString(TIPO);
+			if(tipo.equals(TIPO_SIMPLE)){
+				habitacion=new Simple(documentoHabitacion.getInteger(PLANTA),
+									  documentoHabitacion.getInteger(PUERTA),
+									  documentoHabitacion.getDouble(PRECIO));
+			}
+			if(tipo.equals(TIPO_DOBLE)){
+				habitacion=new Doble(documentoHabitacion.getInteger(PLANTA),
+									  documentoHabitacion.getInteger(PUERTA),
+									  documentoHabitacion.getDouble(PRECIO),
+									  documentoHabitacion.getInteger(CAMAS_INDIVIDUALES),
+									  documentoHabitacion.getInteger(CAMAS_DOBLES));
+			}
+			
+			if(tipo.equals(TIPO_TRIPLE)){
+				habitacion=new Triple(documentoHabitacion.getInteger(PLANTA),
+									  documentoHabitacion.getInteger(PUERTA),
+									  documentoHabitacion.getDouble(PRECIO),
+									  documentoHabitacion.getInteger(BANOS),
+									  documentoHabitacion.getInteger(CAMAS_INDIVIDUALES),
+									  documentoHabitacion.getInteger(CAMAS_DOBLES));
+			}
+			
+			if(tipo.equals(TIPO_SUITE)){
+				habitacion=new Suite(documentoHabitacion.getInteger(PLANTA),
+									  documentoHabitacion.getInteger(PUERTA),
+									  documentoHabitacion.getDouble(PRECIO),
+									  documentoHabitacion.getInteger(BANOS),
+									  documentoHabitacion.getBoolean(JACUZZI));
+			}
+			
+			return habitacion;
+			
 			
 		}
 		
 		
-		public static Reserva getReserva(Document documentoReserva) {}
+		public static Reserva getReserva(Document documentoReserva) {
+			
+			if(documentoReserva==null) {
+				return null;
+			}
+			
+			return new Reserva((Huesped)documentoReserva.get(HUESPED),
+							   (Habitacion)documentoReserva.get(HABITACION),
+							   (Regimen) documentoReserva.get(REGIMEN),
+							   LocalDate.parse(documentoReserva.getString(FECHA_INICIO_RESERVA),FORMATO_DIA),
+							   LocalDate.parse(documentoReserva.getString(FECHA_FIN_RESERVA),FORMATO_DIA),
+							   documentoReserva.getInteger(NUMERO_PERSONAS));
+							   
+		}
 		
 		
 		}

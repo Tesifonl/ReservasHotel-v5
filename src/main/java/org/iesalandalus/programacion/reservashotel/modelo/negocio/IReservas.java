@@ -22,4 +22,6 @@ public interface IReservas {
 	public ArrayList<Reserva> getReservasFuturas (Habitacion habitacion);
 	public void realizarCheckin(Reserva reserva, LocalDateTime fecha);
 	public void realizarCheckout(Reserva reserva, LocalDateTime fecha);
+	public void comenzar();
+	public void terminar();
 }

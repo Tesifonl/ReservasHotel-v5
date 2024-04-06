@@ -199,5 +199,11 @@ public class Reservas implements IReservas{
 			reservaBuscada.setCheckOut(fecha);}
 	}
 	
+	@Override
+	public void comenzar() {};
+	
+	@Override
+	public void terminar() {};
+	
 }
 

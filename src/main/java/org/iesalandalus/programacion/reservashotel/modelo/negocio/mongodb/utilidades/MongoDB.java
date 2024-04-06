@@ -1,11 +1,17 @@
 package org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.utilidades;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import org.bson.Document;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Doble;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Regimen;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Simple;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Suite;
+import org.iesalandalus.programacion.reservashotel.modelo.dominio.Triple;
 import org.iesalandalus.programacion.utilidades.Entrada;
 
 import com.mongodb.ConnectionString;
@@ -23,11 +29,12 @@ public class MongoDB {
 		public static final DateTimeFormatter FORMATO_DIA=DateTimeFormatter.ofPattern("dd-MM-yyyy");
 		public static final DateTimeFormatter FORMATO_DIA_HORA=DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 		
-		private static final String SERVIDOR="mongodb+srv://reservashotel:<reservashotel-2024>@cluster0.unvj2sg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-		private static final int PUERTO=27017;
+		private static final String SERVIDOR="cluster0.unvj2sg.mongodb.net";
+		//private static final int PUERTO=27017;
 		private static final String BD="reservashotel";
 		private static final String USUARIO="reservashotel";
-		private static final String CONTRASEÑA="reservashotel-2024";
+		private static final String CONTRASENA="reservashotel-2024";
+		
 		public static final String HUESPED="huesped";
 		public static final String NOMBRE="nombre";
 		public static final String DNI="dni";
@@ -58,6 +65,7 @@ public class MongoDB {
 		public static final String CHECOUT="checkout";
 		public static final String PRECIO_RESERVA="precio_reserva";
 		public static final String NUMERO_PERSONAS="numero_personas";
+		
 		private static MongoClient conexion = null;
 		
 		private MongoDB() {
@@ -73,39 +81,26 @@ public class MongoDB {
 		}
 		
 		
-		private static void establecerConexion() {
+		public static void establecerConexion() {
 			
-			String connectionString;
-			ServerApi serverApi;
-			MongoClientSettings settings;
+	        String connectionString;
+	        ServerApi serverApi;
+	        MongoClientSettings settings;
 			
-			if (!SERVIDOR.equals("localhost"))
-			{
-				connectionString = "mongodb+srv://"+ USUARIO+ ":" + CONTRASENA + "@"+ SERVIDOR +"/?retryWrites=true&w=majority";
-				serverApi = ServerApi.builder()
-		                .version(ServerApiVersion.V1)
-		                .build();
-				
-				settings = MongoClientSettings.builder()
-		                .applyConnectionString(new ConnectionString(connectionString))
-		                .serverApi(serverApi)
-		                .build();
-			}
-			else
-			{
-				connectionString="mongodb://" + USUARIO + ":" + CONTRASENA + "@" + SERVIDOR + ":" + PUERTO ;
-				MongoCredential credenciales = MongoCredential.createScramSha1Credential(USUARIO, BD, CONTRASENA.toCharArray());
-				
-				settings = MongoClientSettings.builder()
-		                .applyConnectionString(new ConnectionString(connectionString))
-		                .credential(credenciales)
-		                .build();			
-			}
+			connectionString = "mongodb+srv://"+ USUARIO+ ":" + CONTRASENA + "@"+ SERVIDOR +"/?retryWrites=true&w=majority";
+			serverApi = ServerApi.builder()
+	                .version(ServerApiVersion.V1)
+	                .build();
 			
-	                
+			settings = MongoClientSettings.builder()
+	                .applyConnectionString(new ConnectionString(connectionString))
+	                .serverApi(serverApi)
+	                .build();
+			
 			//Creamos la conexión con el serveridos según el setting anterior
 	        conexion = MongoClients.create(settings);
 	        
+	        //Intentamos hacer un ping para probar la conexion
 	        try 
 	        {
 	        	if (!SERVIDOR.equals("localhost"))
@@ -121,8 +116,7 @@ public class MongoDB {
 	        }
 	        
 			System.out.println("Conexión a MongoDB realizada correctamente.");
-
-	    }
+		}
 		
 		public static void cerrarConexion() {
 			if (conexion != null) {
@@ -131,17 +125,100 @@ public class MongoDB {
 				System.out.println("Conexión a MongoDB cerrada.");
 			}
 		}
+
+		
+		public static Document getDocumento(Huesped huesped) {
+			if(huesped==null) { 
+				return null;
+			}
+			String nombre=huesped.getNombre();
+			String dni=huesped.getDni();
+			String correo=huesped.getCorreo();
+			String telefono= huesped.getTelefono();
+			LocalDate fechaNacimiento=huesped.getFechaNacimiento();
+			return new Document().append(NOMBRE, nombre).append(DNI, dni).append(CORREO,correo).append(TELEFONO, telefono).append(FECHA_NACIMIENTO, fechaNacimiento);
+		}
+		
+		public static Document getDocumento(Habitacion habitacion) {
+			
+			if(habitacion==null) {
+				return null;
+			}
+			int planta=habitacion.getPlanta();
+			int puerta=habitacion.getPuerta();
+			double precio=habitacion.getPrecio();
+			String identificador=habitacion.getIdentificador();
+			Document dHabitacion=new Document().append(PLANTA, planta).append(PUERTA, puerta).append(PRECIO, precio).append(IDENTIFICADOR, identificador);
+			
+			if(habitacion instanceof Simple) {
+				dHabitacion.append(TIPO, TIPO_SIMPLE);
+			}
+			else if (habitacion instanceof Doble){
+				int numCamasIndividuales=((Doble)habitacion).getNumCamasIndividuales();
+				int numCamasDobles=((Doble)habitacion).getNumCamasDobles();
+				dHabitacion.append(TIPO, TIPO_DOBLE).append(CAMAS_INDIVIDUALES, numCamasIndividuales).append(CAMAS_DOBLES, numCamasDobles);
+			}
+			else if (habitacion instanceof Triple) {
+				int numBanos=((Triple)habitacion).getNumBanos();
+				int numCamasIndividuales=((Triple)habitacion).getNumCamasIndividuales();
+				int numCamasDobles=((Triple)habitacion).getNumCamasDobles();
+				dHabitacion.append(TIPO, TIPO_TRIPLE).append(BANOS,numBanos).append(CAMAS_INDIVIDUALES, numCamasIndividuales).append(CAMAS_DOBLES, numCamasDobles);
+			}
+			else if(habitacion instanceof Suite) {
+				int numBanos=((Suite)habitacion).getNumBanos();
+				boolean tieneJacuzzi= ((Suite)habitacion).isTieneJacuzzi();
+				dHabitacion.append(TIPO, TIPO_SUITE).append(BANOS,numBanos).append(JACUZZI, tieneJacuzzi);
+			}
+		
+			return dHabitacion;
+		}
+		public static Document getDocumento(Reserva reserva) {
+			
+			if (reserva==null) {
+				return null;
+			}
+			
+			Huesped huesped=reserva.getHuesped();
+			Habitacion habitacion=reserva.getHabitacion();
+			Regimen regimen=reserva.getRegimen();
+			LocalDate fechaInicioReserva=reserva.getFechaInicioReserva();
+			LocalDate fechaFinReserva=reserva.getFechaFinReserva();
+			int numeroPersonas=reserva.getNumeroPersonas();
+			
+			Document dHuesped=getDocumento(huesped);
+			Document dHabitacion=getDocumento(habitacion);
+			
+			return new Document().append(HUESPED,dHuesped).append(HABITACION,dHabitacion).append(REGIMEN, regimen).append(FECHA_INICIO_RESERVA, fechaInicioReserva).append(FECHA_FIN_RESERVA, fechaFinReserva).append(NUMERO_PERSONAS,numeroPersonas);
+			
+		}
+		
+		public static Huesped getHuesped(Document documentoHuesped) {
+			
+			if(documentoHuesped==null) {
+				return null;
+			}
+			//return new Huesped(documentoHuesped.getString(NOMBRE),
+					documentoHuesped.getString(DNI),documentoHuesped.getString(CORREO),
+					documentoHuesped.getString(TELEFONO),
+					(documentoHuesped.getString(FECHA_NACIMIENTO).);
+			
+		}
+		public static Habitacion getHabitacion(Document documentoHabitacion) {
+			
+			Habitacion habitacion=null;
+			
+			if(documentoHabitacion==null) {
+				return null;
+			}
+			
+			
+		}
 		
 		
-		public static Documento getDocumento(Huesped huesped) {}
-		public static Documento getDocumento(Habitacion habitacion) {}
-		public static Documento getDocumento(Reserva reserva) {}
-		public static Huesped getHuesped() {}
-		public static Habitacion getHabitacion() {}
-		public static Reserva getReserva() {}
+		public static Reserva getReserva(Document documentoReserva) {}
 		
 		
-		
+		}
 		
 		
 		

@@ -107,7 +107,7 @@ public class Huespedes implements IHuespedes{
 		
 		if (buscar(huesped)!=null) 
 		{
-		coleccionHuespedes.deleteOne(eq(MongoDB.DNI,huesped.getDni()));
+		coleccionHuespedes.deleteOne(Filters.eq(MongoDB.DNI,huesped.getDni()));
 		}
 	else new OperationNotSupportedException("ERROR: No existe ning�n hu�sped como el indicado.");
 		

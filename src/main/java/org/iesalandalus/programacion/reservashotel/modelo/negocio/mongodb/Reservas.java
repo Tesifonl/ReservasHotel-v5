@@ -155,6 +155,28 @@ public class Reservas implements IReservas{
 	}
 	
 	@Override
+	public ArrayList<Reserva> getReservas (Habitacion habitacion) {
+
+		if(habitacion!=null) {
+			ArrayList<Reserva>  nuevoArray=new ArrayList<>();
+			boolean encontrado=false;
+			int posicion=0;
+			
+			for (int i=0;i<coleccionReservas.size();i++) 
+				if(coleccionReservas.get(i).getHabitacion().equals(habitacion) ) {
+				encontrado=true;
+				nuevoArray.add(coleccionReservas.get(i));
+			}
+				
+			if (encontrado==false) {
+				return null;
+			}
+			return nuevoArray;
+	
+		}else {throw new  NullPointerException("ERROR: No se pueden buscar reservas de una habitaci�n nula.");}
+	}
+	
+	@Override
 	public ArrayList<Reserva> getReservasFuturas (Habitacion habitacion) {
 
 		if(habitacion!=null) {

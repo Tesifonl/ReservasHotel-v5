@@ -3,9 +3,9 @@ package org.iesalandalus.programacion.reservashotel.modelo.negocio;
 public interface IFuenteDatos {
 
 	
-		public void crearHuespedes();
+		public IHuespedes crearHuespedes();
 		
-		public void crearHabitaciones ();
+		public IHabitaciones crearHabitaciones ();
 		
-		public void crearReservas ();
+		public IReservas crearReservas ();
 }

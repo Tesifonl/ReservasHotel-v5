@@ -19,6 +19,7 @@ public interface IReservas {
 	public void borrar (Reserva reserva) throws OperationNotSupportedException;
 	public ArrayList<Reserva> getReservas (Huesped huesped);
 	public ArrayList<Reserva>  getReservas (TipoHabitacion tipoHabitacion);
+	public ArrayList<Reserva>  getReservas (Habitacion habitacion);
 	public ArrayList<Reserva> getReservasFuturas (Habitacion habitacion);
 	public void realizarCheckin(Reserva reserva, LocalDateTime fecha);
 	public void realizarCheckout(Reserva reserva, LocalDateTime fecha);

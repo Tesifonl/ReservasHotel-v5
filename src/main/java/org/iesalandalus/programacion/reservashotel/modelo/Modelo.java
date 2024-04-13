@@ -9,6 +9,7 @@ import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Reserva;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.IFuenteDatos;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.IHabitaciones;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.IHuespedes;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.IReservas;
@@ -21,21 +22,42 @@ public class Modelo {
 	private IHuespedes huespedes;
 	private IHabitaciones habitaciones;
 	private IReservas reservas;
-
 	
-	public Modelo() {
+	private IFuenteDatos fuenteDatos;
+
+	public Modelo(FactoriaFuenteDatos factoriaFuenteDatos) {
+		setFuenteDatos(factoriaFuenteDatos.crear());
 		comenzar();
 	}
+	
+	protected void setFuenteDatos(IFuenteDatos fuenteDatos) {
+		/*if(fuenteDatos == null) {
+			throw new NullPointerException("ERROR: La fuente de datos es nula.");
+		}*/
+		
+		this.fuenteDatos = fuenteDatos;
+	}
+
+	
 
 	public void comenzar() {
-		huespedes=new Huespedes();
-		habitaciones=new Habitaciones();
-		reservas=new Reservas();
+		
+		huespedes = fuenteDatos.crearHuespedes();
+		huespedes.comenzar();
+		
+		habitaciones = fuenteDatos.crearHabitaciones();
+		habitaciones.comenzar();
+		
+		reservas = fuenteDatos.crearReservas();
+		reservas.comenzar();
 		
 	}
 	
 	public void terminar() {
-		System.out.println("El modelo ha finalizado");
+		
+		huespedes.terminar();
+		habitaciones.terminar();
+		reservas.terminar();
 	}
 	
 	public void insertar(Huesped huesped) throws OperationNotSupportedException {
@@ -122,6 +144,16 @@ public class Modelo {
 	
 	public ArrayList<Reserva> getReservas(TipoHabitacion tipoHabitacion){
 		ArrayList<Reserva> nuevoArray1=reservas.getReservas(tipoHabitacion);
+		return nuevoArray1;
+	}
+	
+	public ArrayList<Reserva> getReservas(Habitacion habitacion){
+		ArrayList<Reserva> nuevoArray1=reservas.getReservas(habitacion);
+		return nuevoArray1;
+	}
+	
+	public ArrayList<Reserva> getReservasFuturas(Habitacion habitacion){
+		ArrayList<Reserva> nuevoArray1=reservas.getReservasFuturas(habitacion);
 		return nuevoArray1;
 	}
 	

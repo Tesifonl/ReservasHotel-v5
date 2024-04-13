@@ -3,113 +3,118 @@ package org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
+import javax.swing.text.Document;
 
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.IHuespedes;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.utilidades.MongoDB;
 
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.Filters;
+
 public class Huespedes implements IHuespedes{
 
-	private static ArrayList<Huesped> coleccionHuespedes;
-	private static final String COLECCION=null;
+	private MongoCollection<org.bson.Document> coleccionHuespedes;
+	private static final String COLECCION="huespedes";
 	
 	public Huespedes() {
-		coleccionHuespedes=new ArrayList<>();
-	}
 		
+	}
+
+	@Override
+	public void comenzar() {
+
+		coleccionHuespedes=MongoDB.getBD().getCollection(COLECCION);
+
+	        }
+	
+	@Override
+	public void terminar() {MongoDB.cerrarConexion();}
+	
+	
+	
 	@Override
 	public ArrayList<Huesped> get() {
-		ArrayList<Huesped> copia=copiaProfundaHuespedes();
-		return copia;
-	}
-	
-	private ArrayList<Huesped> copiaProfundaHuespedes() {
-		ArrayList<Huesped> copiahuespedes= new ArrayList<>();
 		
-		for (int i=0;i<coleccionHuespedes.size();i++) {
-			copiahuespedes.add(new Huesped(coleccionHuespedes.get(i)));
+		ArrayList<Huesped> huespedes=new ArrayList<>();
+		
+		FindIterable<org.bson.Document> coleccionHuespedesOrdenada=coleccionHuespedes.find().sort(Sorts.ascending(MongoDB.DNI));
+		
+		for (org.bson.Document documentoHuesped: coleccionHuespedesOrdenada)
+		{
+			Huesped huesped=MongoDB.getHuesped(documentoHuesped);
+			huespedes.add(huesped);
 		}
-	
-		return copiahuespedes;
+		
+		return huespedes;
 	}
+	
+	
 	
 
 	@Override
 	public int getTamano () {
-		return coleccionHuespedes.size();
+		
+		return (int) coleccionHuespedes.countDocuments();
 	}
 
 		
 	@Override
 	public void insertar (Huesped huesped) throws OperationNotSupportedException {
-		boolean encontrado=false;
 		
-		if(huesped!=null) {
-			for (int i=0;i<coleccionHuespedes.size();i++) {
-				if(coleccionHuespedes.get(i).getDni().equals(huesped.getDni())) {
-					encontrado = true;
-					throw new OperationNotSupportedException("ERROR: Ya existe un hu�sped con ese dni.");
-				}
-			}	
 		
-			if(encontrado==false) {
-				coleccionHuespedes.add(huesped);
-			}
+		if(huesped==null) 
+			{
+			throw new NullPointerException("ERROR: No se puede insertar un hu�sped nulo.");
 			
-		}else {throw new NullPointerException("ERROR: No se puede insertar un hu�sped nulo.");}
+			}
+		
+		if (buscar(huesped)==null) 
+			{
+			coleccionHuespedes.insertOne(MongoDB.getDocumento(huesped));
+			}
+		else new OperationNotSupportedException("ERROR: Ya existe un cliente con ese DNI");
 	}
 
+	
 	@Override
 	public Huesped buscar(Huesped huesped) {	
-		int posicion = 0;
-	
 		
+	
 		if(huesped!=null) {
-			boolean encontrado=false;
 			
-			for (int i=0;i<coleccionHuespedes.size();i++) {
-				if(coleccionHuespedes.get(i).getDni().equals(huesped.getDni())) {
-					posicion = i;
-					encontrado=true;
-				}
-			}
+		org.bson.Document documentoHuesped=coleccionHuespedes.find(Filters.eq(MongoDB.DNI,huesped.getDni())).first();
+		return MongoDB.getHuesped((org.bson.Document) documentoHuesped);
 			
-			if (encontrado==true) {
-				return coleccionHuespedes.get(posicion);
-			}
-			else {return null;}
 		}else {throw new NullPointerException("ERROR: No se puede buscar un hu�sped nulo.");}
 	}
+	
 		
 	@Override
 	public void borrar (Huesped huesped) throws OperationNotSupportedException  {
-		boolean encontrado=false;
 		
 		if(huesped!=null) {
-		int indice=0;
-			for (int i=0;i<coleccionHuespedes.size();i++) {
-				if(coleccionHuespedes.get(i).equals(huesped)) {
-				encontrado=true;
-				indice=i;
-				}
-			}	
 			
-			if (encontrado==true) {
-				coleccionHuespedes.remove(indice);
-			}
-			else {
-				throw new OperationNotSupportedException("ERROR: No existe ning�n hu�sped como el indicado.");}
+			throw new NullPointerException("ERROR: No se puede borrar un hu�sped nulo.");
+		}
 		
-		}else {throw new NullPointerException("ERROR: No se puede borrar un hu�sped nulo.");}
+		
+		if (buscar(huesped)!=null) 
+		{
+		coleccionHuespedes.deleteOne(eq(MongoDB.DNI,huesped.getDni()));
+		}
+	else new OperationNotSupportedException("ERROR: No existe ning�n hu�sped como el indicado.");
+		
+		
 	}
 	
-	@Override
-	public void comenzar() {MongoDB.establecerConexion();};
 	
 	
-	@Override
-	public void terminar() {MongoDB.cerrarConexion();};
-	
+
 }

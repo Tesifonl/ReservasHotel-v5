@@ -27,17 +27,7 @@ public class Huespedes implements IHuespedes{
 		
 	}
 
-	@Override
-	public void comenzar() {
 
-		coleccionHuespedes=MongoDB.getBD().getCollection(COLECCION);
-
-	        }
-	
-	@Override
-	public void terminar() {MongoDB.cerrarConexion();}
-	
-	
 	
 	@Override
 	public ArrayList<Huesped> get() {
@@ -54,8 +44,6 @@ public class Huespedes implements IHuespedes{
 		
 		return huespedes;
 	}
-	
-	
 	
 
 	@Override
@@ -99,7 +87,7 @@ public class Huespedes implements IHuespedes{
 	@Override
 	public void borrar (Huesped huesped) throws OperationNotSupportedException  {
 		
-		if(huesped!=null) {
+		if(huesped==null) {
 			
 			throw new NullPointerException("ERROR: No se puede borrar un hu�sped nulo.");
 		}
@@ -115,6 +103,20 @@ public class Huespedes implements IHuespedes{
 	}
 	
 	
+	@Override
+	public void comenzar() {
+		
+		MongoDB.establecerConexion();
+		coleccionHuespedes=MongoDB.getBD().getCollection(COLECCION);
+
+	 }
+	
+	@Override
+	public void terminar() {
+		
+		MongoDB.cerrarConexion();
+	
+	}
 	
 
 }

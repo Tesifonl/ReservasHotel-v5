@@ -15,93 +15,111 @@ import org.iesalandalus.programacion.reservashotel.modelo.dominio.Suite;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.TipoHabitacion;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Triple;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.IReservas;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.utilidades.MongoDB;
+
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
 
 public class Reservas implements IReservas{
 
-	private static ArrayList<Reserva> coleccionReservas;
+	
+	private MongoCollection<org.bson.Document> coleccionReservas;
+	private static final String COLECCION="reservas";
 	
 	public Reservas () {
-		
-		coleccionReservas=new ArrayList<>();
+
+	
 	}
 	
 	@Override
 	public ArrayList<Reserva> get() {
-		ArrayList<Reserva> copia=copiaProfundaReservas();
-		return copia;
+		
+		ArrayList<Reserva> reservas=new ArrayList<>();
+		
+		FindIterable<org.bson.Document> coleccionReservasOrdenada=coleccionReservas.find().sort(Sorts.ascending(MongoDB.FECHA_INICIO_RESERVA));
+		
+		for (org.bson.Document documentoReserva: coleccionReservasOrdenada)
+		{
+			Reserva reserva=MongoDB.getReserva(documentoReserva);
+			reservas.add(reserva);
+		}
+		
+		return reservas;
 	}
+	
+	
 	
 	@Override
 	public int getTamano() {
-		
-		int tamano=0;
-		ArrayList<Reserva> copia=copiaProfundaReservas();
-		return tamano=copia.size();
+	
+		return (int) coleccionReservas.countDocuments();
 	}
 	
-	
-	private ArrayList<Reserva> copiaProfundaReservas() {
-		ArrayList<Reserva> copiaReservas=new ArrayList<>();
-		
-		for (int i=0;i<coleccionReservas.size();i++) {
-			copiaReservas.add(new Reserva(coleccionReservas.get(i)));
-		}
-		
-		return copiaReservas;
-	}
+
 
 	@Override
 	public void insertar (Reserva reserva) throws OperationNotSupportedException {
 		
-		if(reserva!=null) {
-			if(coleccionReservas.contains(reserva)) {
-				throw new OperationNotSupportedException("ERROR: Ya existe una reserva igual.");
-			}	
-			else {coleccionReservas.add(reserva);}
-			
-		}else {throw new NullPointerException("ERROR: No se puede insertar una reserva nula.");}
+		if(reserva==null) 
+		{
+		throw new NullPointerException("ERROR: No se puede insertar una reserva nula.");
+		
+		}
+	
+	if (buscar(reserva)==null) 
+		{
+		coleccionReservas.insertOne(MongoDB.getDocumento(reserva));
+		}
+	else new OperationNotSupportedException("ERROR: Ya existe una reserva con ese IDENTIFICADOR");
 	}
 	
+	
 	@Override
-	public Reserva buscar(Reserva reserva) {	
-		Reserva buscarReserva=null;
-		int indice=0;
+	public Reserva buscar(Reserva reserva) {
 		
 		if(reserva!=null) {
-				if(coleccionReservas.contains(reserva)) {
-					indice=coleccionReservas.indexOf(reserva);
-					buscarReserva=coleccionReservas.get(indice);
-					return buscarReserva;
-				}else {return null;}
-			}else {throw new NullPointerException("ERROR: No se puede buscar una reserva nula.");}
+			
+		org.bson.Document documentoReserva=coleccionReservas.find(Filters.eq(MongoDB.FECHA_INICIO_RESERVA,reserva.getFechaInicioReserva())).first();
+		return MongoDB.getReserva((org.bson.Document) documentoReserva);
+			
+		}else {throw new NullPointerException("ERROR: No se puede buscar una reserva nula.");}
+
 	}
+	
 	
 	@Override
 	public void borrar (Reserva reserva) throws OperationNotSupportedException {
-		int indice=0;
 		
-		if(reserva!=null) {
-
-			if(coleccionReservas.contains(reserva)){
-				indice=coleccionReservas.indexOf(reserva);
-				coleccionReservas.remove(indice);
-			}else {
-				throw new OperationNotSupportedException("ERROR: No existe ninguna reserva como la indicada.");}	
 		
-		}else {throw new NullPointerException("ERROR: No se puede borrar una reserva nula.");}
+		if(reserva==null) {
+			
+			throw new NullPointerException("ERROR: No se puede borrar una reserva nula.");
+		}
+		
+		
+		if (buscar(reserva)!=null) 
+		{
+		coleccionReservas.deleteOne(Filters.eq(MongoDB.IDENTIFICADOR,reserva.getFechaInicioReserva()));
+		}
+	else new OperationNotSupportedException("ERROR: No existe ninguna reserva como la indicada.");
 	}
+	
 
 	@Override
 	public ArrayList<Reserva> getReservas (Huesped huesped) {
+		
+		ArrayList <Reserva>coleccionReservas2=get();
 	
 		if(huesped!=null) {
 			ArrayList<Reserva> nuevoArray=new ArrayList<>();
 			boolean encontrado=false;
 	
-			for (int i=0;i<coleccionReservas.size();i++) {
-				if(coleccionReservas.get(i).getHuesped().getDni().equals(huesped.getDni())) {
+			for (int i=0;i<coleccionReservas2.size();i++) {
+				if(coleccionReservas2.get(i).getHuesped().getDni().equals(huesped.getDni())) {
 					encontrado=true;
-					nuevoArray.add(coleccionReservas.get(i));
+					nuevoArray.add(coleccionReservas2.get(i));
 				}
 			}	
 				
@@ -117,30 +135,32 @@ public class Reservas implements IReservas{
 	@Override
 	public ArrayList<Reserva>  getReservas (TipoHabitacion tipoHabitacion) {
 		
+		ArrayList <Reserva>coleccionReservas2=get();
+		
 		if(tipoHabitacion!=null) {
 			ArrayList<Reserva> nuevoArray=new ArrayList<>();
 			boolean encontrado=false;
 
-			for (int i=0;i<coleccionReservas.size();i++) {
+			for (int i=0;i<coleccionReservas2.size();i++) {
 
-				if (coleccionReservas.get(i).getHabitacion() instanceof Simple
+				if (coleccionReservas2.get(i).getHabitacion() instanceof Simple
 						&& tipoHabitacion.equals(TipoHabitacion.SIMPLE)) {
-						nuevoArray.add(new Reserva(coleccionReservas.get(i)));
+						nuevoArray.add(new Reserva(coleccionReservas2.get(i)));
 						encontrado = true;
 					}
-					else if (coleccionReservas.get(i).getHabitacion()  instanceof Doble
+					else if (coleccionReservas2.get(i).getHabitacion()  instanceof Doble
 						&& tipoHabitacion.equals(TipoHabitacion.DOBLE)) {
-						nuevoArray.add(new Reserva(coleccionReservas.get(i)));
+						nuevoArray.add(new Reserva(coleccionReservas2.get(i)));
 						encontrado = true;
 					}
-					else if (coleccionReservas.get(i).getHabitacion()  instanceof Triple
+					else if (coleccionReservas2.get(i).getHabitacion()  instanceof Triple
 						&& tipoHabitacion.equals(TipoHabitacion.TRIPLE)) {
-						nuevoArray.add(new Reserva(coleccionReservas.get(i)));
+						nuevoArray.add(new Reserva(coleccionReservas2.get(i)));
 						encontrado = true;
 					}
-					else if (coleccionReservas.get(i).getHabitacion()  instanceof Suite
+					else if (coleccionReservas2.get(i).getHabitacion()  instanceof Suite
 						&& tipoHabitacion.equals(TipoHabitacion.SUITE)) {
-						nuevoArray.add(new Reserva(coleccionReservas.get(i)));
+						nuevoArray.add(new Reserva(coleccionReservas2.get(i)));
 						encontrado = true;
 					}
 			}
@@ -156,16 +176,18 @@ public class Reservas implements IReservas{
 	
 	@Override
 	public ArrayList<Reserva> getReservas (Habitacion habitacion) {
+		
+		ArrayList <Reserva>coleccionReservas2=get();
 
 		if(habitacion!=null) {
 			ArrayList<Reserva>  nuevoArray=new ArrayList<>();
 			boolean encontrado=false;
 			int posicion=0;
 			
-			for (int i=0;i<coleccionReservas.size();i++) 
-				if(coleccionReservas.get(i).getHabitacion().equals(habitacion) ) {
+			for (int i=0;i<coleccionReservas2.size();i++) 
+				if(coleccionReservas2.get(i).getHabitacion().equals(habitacion) ) {
 				encontrado=true;
-				nuevoArray.add(coleccionReservas.get(i));
+				nuevoArray.add(coleccionReservas2.get(i));
 			}
 				
 			if (encontrado==false) {
@@ -178,17 +200,19 @@ public class Reservas implements IReservas{
 	
 	@Override
 	public ArrayList<Reserva> getReservasFuturas (Habitacion habitacion) {
+		
+		ArrayList <Reserva>coleccionReservas2=get();
 
 		if(habitacion!=null) {
 			ArrayList<Reserva>  nuevoArray=new ArrayList<>();
 			boolean encontrado=false;
 			int posicion=0;
 			
-			for (int i=0;i<coleccionReservas.size();i++) 
-				if(coleccionReservas.get(i).getHabitacion().equals(habitacion) 
-						&& coleccionReservas.get(i).getFechaInicioReserva().isAfter(LocalDate.now())) {
+			for (int i=0;i<coleccionReservas2.size();i++) 
+				if(coleccionReservas2.get(i).getHabitacion().equals(habitacion) 
+						&& coleccionReservas2.get(i).getFechaInicioReserva().isAfter(LocalDate.now())) {
 				encontrado=true;
-				nuevoArray.add(coleccionReservas.get(i));
+				nuevoArray.add(coleccionReservas2.get(i));
 			}
 				
 			if (encontrado==false) {
@@ -222,10 +246,19 @@ public class Reservas implements IReservas{
 	}
 	
 	@Override
-	public void comenzar() {};
+	public void comenzar() {
+		
+		MongoDB.establecerConexion();
+		coleccionReservas=MongoDB.getBD().getCollection(COLECCION);
+
+	 }
 	
 	@Override
-	public void terminar() {};
+	public void terminar() {
+		
+		MongoDB.cerrarConexion();
+	
+	}
 	
 }
 

@@ -22,18 +22,15 @@ public class Modelo {
 	private IHuespedes huespedes;
 	private IHabitaciones habitaciones;
 	private IReservas reservas;
-	
 	private IFuenteDatos fuenteDatos;
 
+	
 	public Modelo(FactoriaFuenteDatos factoriaFuenteDatos) {
 		setFuenteDatos(factoriaFuenteDatos.crear());
 		comenzar();
 	}
 	
 	protected void setFuenteDatos(IFuenteDatos fuenteDatos) {
-		/*if(fuenteDatos == null) {
-			throw new NullPointerException("ERROR: La fuente de datos es nula.");
-		}*/
 		
 		this.fuenteDatos = fuenteDatos;
 	}

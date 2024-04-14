@@ -101,7 +101,7 @@ public class Reservas implements IReservas{
 		
 		if (buscar(reserva)!=null) 
 		{
-		coleccionReservas.deleteOne(Filters.eq(MongoDB.IDENTIFICADOR,reserva.getFechaInicioReserva()));
+		coleccionReservas.deleteOne(Filters.eq(MongoDB.FECHA_INICIO_RESERVA,reserva.getFechaInicioReserva()));
 		}
 	else new OperationNotSupportedException("ERROR: No existe ninguna reserva como la indicada.");
 	}

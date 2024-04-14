@@ -55,21 +55,22 @@ public class Habitaciones implements IHabitaciones{
 		ArrayList<Habitacion> coleccionHabitaciones2=get();
 		
 		if(tipoHabitacion!=null) {
+			
 			ArrayList<Habitacion> nuevoArray= new ArrayList<>();
 
 			for (int i=0;i<coleccionHabitaciones2.size();i++) {
 
 				if (coleccionHabitaciones2.get(i) instanceof Simple
 					&& tipoHabitacion.equals(TipoHabitacion.SIMPLE)) {
-					nuevoArray.add(new Simple((Simple)coleccionHabitaciones.get(i)));
+					nuevoArray.add(new Simple((Simple)coleccionHabitaciones2.get(i)));
 				}
 				else if (coleccionHabitaciones2.get(i) instanceof Doble
 					&& tipoHabitacion.equals(TipoHabitacion.DOBLE)) {
-					nuevoArray.add(new Doble((Doble)coleccionHabitaciones.get(i)));
+					nuevoArray.add(new Doble((Doble)coleccionHabitaciones2.get(i)));
 				}
 				else if (coleccionHabitaciones2.get(i) instanceof Triple
 					&& tipoHabitacion.equals(TipoHabitacion.TRIPLE)) {
-					nuevoArray.add(new Triple((Triple)coleccionHabitaciones.get(i)));
+					nuevoArray.add(new Triple((Triple)coleccionHabitaciones2.get(i)));
 				}
 				else if (coleccionHabitaciones2.get(i) instanceof Suite
 					&& tipoHabitacion.equals(TipoHabitacion.SUITE)) {
@@ -107,29 +108,25 @@ public class Habitaciones implements IHabitaciones{
 		if(habitacion!=null) {
 			
 		org.bson.Document documentoHabitacion=coleccionHabitaciones.find(Filters.eq(MongoDB.IDENTIFICADOR,habitacion.getIdentificador())).first();
-		return MongoDB.get((org.bson.Document) documentoHuesped);
+		return MongoDB.getHabitacion(documentoHabitacion);
 			
 		}else {throw new NullPointerException("ERROR: No se puede buscar un hu�sped nulo.");}
 	}
 	
 	@Override
 	public void borrar (Habitacion habitacion) throws OperationNotSupportedException {
-		boolean encontrado=false;
 		
-		if(habitacion!=null) {
-		int indice=0;
-			for (int i=0;i<coleccionHabitaciones.size();i++) {
-				if(coleccionHabitaciones.get(i).equals(habitacion)) {
-				encontrado=true;indice=i;
-				}
-			}
-				
-			if(encontrado==true){
-				coleccionHabitaciones.remove(indice);
-			}
-			else {throw new OperationNotSupportedException("ERROR: No existe ninguna habitaci�n como la indicada.");}	
+		if(habitacion==null) {
+			
+			throw new NullPointerException("ERROR: No se puede borrar una habitacion nula.");
+		}
 		
-		}else {throw new NullPointerException("ERROR: No se puede borrar una habitaci�n nula.");}
+		
+		if (buscar(habitacion)!=null) 
+		{
+		coleccionHabitaciones.deleteOne(Filters.eq(MongoDB.IDENTIFICADOR,habitacion.getIdentificador()));
+		}
+	else new OperationNotSupportedException("ERROR: No existe ninguna habitacion como la indicada.");
 	}
 	
 	@Override

@@ -6,8 +6,10 @@ import javax.naming.OperationNotSupportedException;
 
 import org.iesalandalus.programacion.reservashotel.controlador.Controlador;
 import org.iesalandalus.programacion.reservashotel.modelo.FactoriaFuenteDatos;
+import org.iesalandalus.programacion.reservashotel.modelo.IModelo;
 import org.iesalandalus.programacion.reservashotel.modelo.Modelo;
 import org.iesalandalus.programacion.reservashotel.vista.Vista;
+import org.iesalandalus.programacion.utilidades.Entrada;
 
 public class MainApp {
 
@@ -23,7 +25,10 @@ public class MainApp {
     }
     
 
+		
+		
 	private static Modelo procesarArgumentosFuenteDatos(String[] args) {
+			
 		
 		Modelo modelo=null;
 		
@@ -42,5 +47,7 @@ public class MainApp {
 		return modelo;
 	}
 	
-
 }
+	
+
+

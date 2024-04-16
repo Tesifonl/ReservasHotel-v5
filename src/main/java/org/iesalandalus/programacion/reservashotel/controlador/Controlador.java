@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.naming.OperationNotSupportedException;
 
+import org.iesalandalus.programacion.reservashotel.modelo.IModelo;
 import org.iesalandalus.programacion.reservashotel.modelo.Modelo;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Habitacion;
 import org.iesalandalus.programacion.reservashotel.modelo.dominio.Huesped;
@@ -18,10 +19,9 @@ public class Controlador {
 	private Vista vista;
 	
 	public Controlador (Modelo modelo,Vista vista) {
-	if (modelo!=null && vista!=null) {
+	if (modelo==null && vista==null) {
 		this.modelo = modelo;
 		this.vista = vista;
-		vista.setControlador(this);
 		}else {throw new NullPointerException("ERROR: No es posible por no llegar un obejto");}
 	}
 	public void comenzar() throws OperationNotSupportedException {
@@ -35,43 +35,31 @@ public class Controlador {
 	}
 	
 	public void insertar(Huesped huesped) throws OperationNotSupportedException {
-		try {
-			modelo.insertar(huesped);
-			}catch (OperationNotSupportedException ex) {
-			System.out.println(ex.getMessage());}
+		modelo.insertar(huesped);
 	}
 	
 	public Huesped buscar(Huesped huesped) {
 		return modelo.buscar(huesped);
 	}
 	
-	public void borrar (Huesped huesped) {
-		try {
-			modelo.borrar(huesped);
-			}catch (OperationNotSupportedException ex) {
-			System.out.println(ex.getMessage());}
+	public void borrar (Huesped huesped) throws OperationNotSupportedException {
+		modelo.borrar(huesped);
 	}
 	
 	public ArrayList<Huesped> getHuespedes(){
 		return modelo.getHuespedes();
 	}
 	
-	public void insertar(Habitacion habitacion) {
-		try {
-			modelo.insertar(habitacion);
-			}catch (OperationNotSupportedException ex) {
-			System.out.println(ex.getMessage());}
+	public void insertar(Habitacion habitacion) throws OperationNotSupportedException {
+		modelo.insertar(habitacion);
 	}
 	
 	public Habitacion buscar(Habitacion habitacion) {
 		return modelo.buscar(habitacion);
 	}
 	
-	public void borrar (Habitacion habitacion) {
-		try {
-			modelo.borrar(habitacion);
-			}catch (OperationNotSupportedException ex) {
-			System.out.println(ex.getMessage());}
+	public void borrar (Habitacion habitacion) throws OperationNotSupportedException {
+		modelo.borrar(habitacion);
 	}
 	
 	public ArrayList<Habitacion> getHabitaciones() {
@@ -93,11 +81,8 @@ public class Controlador {
 		return modelo.buscar(reserva);
 	}
 	
-	public void borrar (Reserva reserva) {
-		try{
-			modelo.borrar(reserva);
-			}catch (OperationNotSupportedException ex) {
-			System.out.println(ex.getMessage());}
+	public void borrar (Reserva reserva) throws OperationNotSupportedException {
+		modelo.borrar(reserva);
 		}
 	
 	public ArrayList<Reserva> getReservas() {
@@ -112,18 +97,12 @@ public class Controlador {
 		return modelo.getReservas(tipoHabitacion);
 	}
 	
-	public void realizarCheckin(Reserva reserva, LocalDateTime fecha) {
-		try {
-			modelo.realizarCheckin(reserva, fecha);
-			}catch (OperationNotSupportedException ex) {
-			System.out.println(ex.getMessage());}
+	public void realizarCheckin(Reserva reserva, LocalDateTime fecha) throws OperationNotSupportedException {
+		modelo.realizarCheckin(reserva, fecha);
 	}
 	
-	public void realizarCheckout(Reserva reserva, LocalDateTime fecha) {
-		try {
-			modelo.realizarCheckout(reserva, fecha);
-			}catch (OperationNotSupportedException ex) {
-			System.out.println(ex.getMessage());}
+	public void realizarCheckout(Reserva reserva, LocalDateTime fecha) throws OperationNotSupportedException {
+		modelo.realizarCheckout(reserva, fecha);
 	}
 }
 

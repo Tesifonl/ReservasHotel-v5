@@ -40,13 +40,12 @@ public class Modelo {
 	public void comenzar() {
 		
 		huespedes = fuenteDatos.crearHuespedes();
-		huespedes.comenzar();
 		
 		habitaciones = fuenteDatos.crearHabitaciones();
-		habitaciones.comenzar();
 		
 		reservas = fuenteDatos.crearReservas();
-		reservas.comenzar();
+		
+		
 		
 	}
 	

@@ -158,6 +158,9 @@ public class Vista {
 		}
 		catch(IllegalArgumentException e){
 			System.out.println(e.getMessage());
+		} catch (OperationNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -188,6 +191,9 @@ public class Vista {
 			System.out.println(e.getMessage());}
 		catch(IllegalArgumentException e){
 			System.out.println(e.getMessage());
+		} catch (OperationNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -219,6 +225,9 @@ public class Vista {
 			System.out.println(e.getMessage());}
 		catch(IllegalArgumentException e){
 			System.out.println(e.getMessage());
+		} catch (OperationNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -361,7 +370,12 @@ public class Vista {
 			System.out.println("Introduce el numero de reserva a anular");
 			posicion=Entrada.entero();
 			reservaAnular=nuevoArray2.get(posicion);
-			controlador.borrar(reservaAnular);
+			try {
+				controlador.borrar(reservaAnular);
+			} catch (OperationNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else {
 			System.out.println("No existe ninguna reserva anulable para este huesped");
@@ -446,7 +460,12 @@ public class Vista {
 				posicion=Entrada.entero();
 				reservaCheck=nuevoArray.get(posicion);
 				
-				controlador.realizarCheckin(reservaCheck,reservaCheck.getFechaInicioReserva().atStartOfDay());
+				try {
+					controlador.realizarCheckin(reservaCheck,reservaCheck.getFechaInicioReserva().atStartOfDay());
+				} catch (OperationNotSupportedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}else {System.out.println("No existen reservas para este huesped");}
 			
 		}
@@ -473,7 +492,12 @@ public class Vista {
 				posicion=Entrada.entero();
 				reservaCheck=nuevoArray.get(posicion);
 				
-			controlador.realizarCheckout(reservaCheck, reservaCheck.getFechaFinReserva().atStartOfDay());
+			try {
+				controlador.realizarCheckout(reservaCheck, reservaCheck.getFechaFinReserva().atStartOfDay());
+			} catch (OperationNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 				}else {System.out.println("No existen reservas para este huesped");}
 			
 		}

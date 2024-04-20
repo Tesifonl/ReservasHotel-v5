@@ -19,7 +19,7 @@ public class Controlador {
 	private Vista vista;
 	
 	public Controlador (Modelo modelo,Vista vista) {
-	if (modelo==null && vista==null) {
+	if (modelo!=null && vista!=null) {
 		this.modelo = modelo;
 		this.vista = vista;
 		}else {throw new NullPointerException("ERROR: No es posible por no llegar un obejto");}

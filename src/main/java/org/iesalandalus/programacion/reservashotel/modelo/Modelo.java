@@ -16,6 +16,7 @@ import org.iesalandalus.programacion.reservashotel.modelo.negocio.IReservas;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.Habitaciones;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.Huespedes;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.Reservas;
+import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.utilidades.MongoDB;
 
 public class Modelo {
 	
@@ -38,6 +39,7 @@ public class Modelo {
 	
 
 	public void comenzar() {
+		
 		
 		huespedes = fuenteDatos.crearHuespedes();
 		

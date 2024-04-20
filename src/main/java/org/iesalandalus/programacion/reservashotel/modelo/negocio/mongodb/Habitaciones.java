@@ -28,6 +28,7 @@ public class Habitaciones implements IHabitaciones{
 	
 	public Habitaciones() {
 		
+		coleccionHabitaciones=MongoDB.getBD().getCollection(COLECCION);
 	}
 	
 	
@@ -110,7 +111,7 @@ public class Habitaciones implements IHabitaciones{
 		org.bson.Document documentoHabitacion=coleccionHabitaciones.find(Filters.eq(MongoDB.IDENTIFICADOR,habitacion.getIdentificador())).first();
 		return MongoDB.getHabitacion(documentoHabitacion);
 			
-		}else {throw new NullPointerException("ERROR: No se puede buscar un hu�sped nulo.");}
+		}else {throw new NullPointerException("ERROR: No se puede buscar una habitaci�n nula.");}
 	}
 	
 	@Override

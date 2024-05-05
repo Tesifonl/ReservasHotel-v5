@@ -25,6 +25,7 @@ public class Huespedes implements IHuespedes{
 	
 	public Huespedes() {
 		
+		coleccionHuespedes=MongoDB.getBD().getCollection(COLECCION);
 	}
 
 

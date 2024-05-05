@@ -1,6 +1,7 @@
 package org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.utilidades;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import org.bson.Document;
@@ -203,13 +204,17 @@ public class MongoDB {
 			}
 			
 			
+			
 			return new Huesped(documentoHuesped.getString(NOMBRE),
 							   documentoHuesped.getString(DNI),
 							   documentoHuesped.getString(CORREO),
 							   documentoHuesped.getString(TELEFONO),
-							   (LocalDate.parse(documentoHuesped.getString(FECHA_NACIMIENTO),FORMATO_DIA)));
-			
-		}
+							   (documentoHuesped.getDate(FECHA_NACIMIENTO).toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
+						
+			}
+		
+		
+		
 		
 		public static Habitacion getHabitacion(Document documentoHabitacion) {
 			

@@ -92,7 +92,7 @@ public class Habitaciones implements IHabitaciones{
 		
 		if(habitacion==null) 
 		{
-		throw new NullPointerException("ERROR: No se puede insertar una habitacion nula.");
+		throw new NullPointerException("ERROR: No se puede insertar una habitaci�n nula.");
 		
 		}
 	
@@ -119,9 +119,9 @@ public class Habitaciones implements IHabitaciones{
 		
 		if(habitacion==null) {
 			
-			throw new NullPointerException("ERROR: No se puede borrar una habitacion nula.");
+			throw new NullPointerException("ERROR: No se puede borrar una habitaci�n nula.");
 		}
-		
+	
 		
 		if (buscar(habitacion)!=null) 
 		{

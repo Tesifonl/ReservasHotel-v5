@@ -15,10 +15,10 @@ import org.iesalandalus.programacion.reservashotel.vista.Vista;
 
 public class Controlador {
 	
-	private Modelo modelo;
+	private IModelo modelo;
 	private Vista vista;
 	
-	public Controlador (Modelo modelo,Vista vista) {
+	public Controlador (IModelo modelo,Vista vista) {
 	if (modelo!=null && vista!=null) {
 		this.modelo = modelo;
 		this.vista = vista;

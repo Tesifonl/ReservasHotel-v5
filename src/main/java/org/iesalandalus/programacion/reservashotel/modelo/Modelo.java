@@ -18,7 +18,7 @@ import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.Huespe
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.Reservas;
 import org.iesalandalus.programacion.reservashotel.modelo.negocio.mongodb.utilidades.MongoDB;
 
-public class Modelo {
+public class Modelo implements IModelo{
 	
 	private IHuespedes huespedes;
 	private IHabitaciones habitaciones;
@@ -58,7 +58,7 @@ public class Modelo {
 		reservas.terminar();
 	}
 	
-	public void insertar(Huesped huesped) throws OperationNotSupportedException {
+	public void insertar(Huesped huesped)  {
 		try {
 			huespedes.insertar(huesped);
 			}catch (OperationNotSupportedException ex) {
@@ -69,7 +69,7 @@ public class Modelo {
 		return huespedes.buscar(huesped);
 	}
 	
-	public void borrar (Huesped huesped) throws OperationNotSupportedException {
+	public void borrar (Huesped huesped) {
 		try {
 			huespedes.borrar(huesped);
 			}catch (OperationNotSupportedException ex) {
@@ -81,7 +81,7 @@ public class Modelo {
 		return nuevoArray1;
 	}
 	
-	public void insertar(Habitacion habitacion) throws OperationNotSupportedException {
+	public void insertar(Habitacion habitacion)  {
 		try {
 			habitaciones.insertar(habitacion);
 			}catch (OperationNotSupportedException ex) {
@@ -92,7 +92,7 @@ public class Modelo {
 		return habitaciones.buscar(habitacion);
 	}
 	
-	public void borrar (Habitacion habitacion) throws OperationNotSupportedException {
+	public void borrar (Habitacion habitacion) {
 		
 		try {
 			habitaciones.borrar(habitacion);
@@ -122,7 +122,7 @@ public class Modelo {
 		return reservas.buscar(reserva);
 	}
 	
-	public void borrar (Reserva reserva) throws OperationNotSupportedException {
+	public void borrar (Reserva reserva) {
 		
 		try {
 			reservas.borrar(reserva);
@@ -155,19 +155,21 @@ public class Modelo {
 		return nuevoArray1;
 	}
 	
-	public void realizarCheckin(Reserva reserva, LocalDateTime fecha) throws OperationNotSupportedException {
-		if(reserva==null || fecha==null) {
-			throw new  OperationNotSupportedException("ERROR: No se puede hacer checkin de una reserva nula o sin fecha");
-		}else {
+	public void realizarCheckin(Reserva reserva, LocalDateTime fecha)  {
+
+		try {
 			reservas.realizarCheckin(reserva, fecha);
-		}
+			}catch (NullPointerException ex) {
+			System.out.println(ex.getMessage());}	
+		
 	}
 	
-	public void realizarCheckout(Reserva reserva, LocalDateTime fecha) throws OperationNotSupportedException {
-		if(reserva==null || fecha==null) {
-			throw new  OperationNotSupportedException("ERROR: No se puede hacer checkin de una reserva nula o sin fecha");
-		}else {
+	public void realizarCheckout(Reserva reserva, LocalDateTime fecha)  {
+
+		try {
 			reservas.realizarCheckout(reserva, fecha);
-		}
+			}catch (NullPointerException ex) {
+			System.out.println(ex.getMessage());}	
+
 	}
 }

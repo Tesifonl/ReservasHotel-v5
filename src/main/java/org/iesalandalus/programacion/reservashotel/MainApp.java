@@ -18,7 +18,7 @@ public class MainApp {
     public static void main(String[] args) throws OperationNotSupportedException{
         
 		Vista vista=new Vista();
-		Modelo modelo=procesarArgumentosFuenteDatos(args);
+		IModelo modelo=procesarArgumentosFuenteDatos(args);
 		Controlador controlador=new Controlador(modelo, vista);
 	
 		controlador.comenzar();
@@ -28,10 +28,10 @@ public class MainApp {
 
 		
 		
-	private static Modelo procesarArgumentosFuenteDatos(String[] args) {
+	private static IModelo procesarArgumentosFuenteDatos(String[] args) {
 			
 		
-		Modelo modelo=null;
+		IModelo modelo=null;
 		
 		for (String argumento : args) {
 
